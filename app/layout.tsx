@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthProvider";
 import { WalletProvider } from "@/contexts/PrivyProvider";
 import Navbar from "@/components/layout/Navbar";
@@ -20,18 +19,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <ThemeProvider>
-          <AuthProvider>
-            <WalletProvider>
-              <Navbar />
-              <main className="min-h-screen pt-16">
-                {children}
-              </main>
-              <Footer />
-              <Toaster position="top-right" />
-            </WalletProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <WalletProvider>
+            <Navbar />
+            <main className="min-h-screen pt-16">
+              {children}
+            </main>
+            <Footer />
+            <Toaster position="top-right" />
+          </WalletProvider>
+        </AuthProvider>
       </body>
     </html>
   );
