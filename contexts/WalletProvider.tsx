@@ -5,13 +5,6 @@ import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider as SolanaWalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
-import dynamic from 'next/dynamic';
-
-// Dynamically import CSS to avoid SSR issues
-const WalletStyles = dynamic(
-  () => import('@solana/wallet-adapter-react-ui/styles.css').then(() => () => null),
-  { ssr: false }
-);
 
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const network = WalletAdapterNetwork.Mainnet;

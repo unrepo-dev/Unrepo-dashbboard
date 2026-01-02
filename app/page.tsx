@@ -46,6 +46,9 @@ const getCodeBlockClasses = (theme: string) =>
 const getAlertClasses = (theme: string) =>
   theme === 'dark' ? 'bg-zinc-900 border border-gray-800' : 'bg-gray-50 border border-gray-200';
 
+const getHoverClasses = (theme: string) =>
+  theme === 'dark' ? 'hover:bg-zinc-800' : 'hover:bg-gray-100';
+
 export default function DeveloperPortal() {
   const { data: session, status } = useSession();
   const { theme } = useTheme();
