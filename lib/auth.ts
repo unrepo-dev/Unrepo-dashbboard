@@ -1,6 +1,5 @@
 import { NextAuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
-import prisma from './prisma';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -16,31 +15,38 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
+      // Sync user with backend database after GitHub login
       if (account?.provider === 'github') {
         const githubProfile = profile as any;
         
         try {
-          // Update or create user with GitHub info
-          await prisma.user.upsert({
-            where: { githubId: githubProfile.id?.toString() },
-            update: {
-              githubUsername: githubProfile.login,
-              name: githubProfile.name || githubProfile.login,
-              avatar: githubProfile.avatar_url,
-              email: githubProfile.email,
-              lastLogin: new Date(),
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+          
+          // Call backend to save/update user in database
+          const response = await fetch(`${apiUrl}/auth/github/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
             },
-            create: {
+            body: JSON.stringify({
               githubId: githubProfile.id?.toString(),
               githubUsername: githubProfile.login,
               name: githubProfile.name || githubProfile.login,
+              email: user.email || githubProfile.email,
               avatar: githubProfile.avatar_url,
-              email: githubProfile.email,
-              authMethod: 'GITHUB',
-            },
+            }),
           });
+
+          if (!response.ok) {
+            console.error('Failed to sync user with backend:', await response.text());
+            // Still allow login even if backend sync fails
+          } else {
+            const data = await response.json();
+            console.log('User synced with backend:', data.user);
+          }
         } catch (error) {
-          console.error('Error upserting user:', error);
+          console.error('Error syncing user with backend:', error);
+          // Still allow login even if backend sync fails
         }
       }
       return true;
@@ -56,24 +62,9 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user && token.githubId) {
-        try {
-          const dbUser = await prisma.user.findFirst({
-            where: {
-              githubId: token.githubId as string,
-            },
-          });
-
-          if (dbUser) {
-            // @ts-ignore - Extending session user object
-            session.user.id = dbUser.id;
-            (session.user as any).authMethod = dbUser.authMethod;
-            (session.user as any).isTokenHolder = dbUser.isTokenHolder;
-            (session.user as any).walletAddress = dbUser.walletAddress;
-            (session.user as any).githubUsername = dbUser.githubUsername;
-          }
-        } catch (error) {
-          console.error('Error fetching user:', error);
-        }
+        // Add GitHub info to session
+        (session.user as any).githubId = token.githubId;
+        (session.user as any).githubUsername = token.githubUsername;
       }
       return session;
     },
