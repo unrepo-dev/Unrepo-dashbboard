@@ -38,7 +38,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-8">
               <Link href="/" className="flex items-center space-x-2">
-                <img src="/un.png" alt="UnRepo Logo" className="w-16 h-16 object-contain" />
+                <img src="/blackremove.png" alt="UnRepo Logo" className="w-16 h-16 object-contain" />
                 <span className="text-xl font-bold text-foreground">UnRepo</span>
               </Link>
             </div>
@@ -55,7 +55,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-8">
               <Link href="/" className="flex items-center space-x-2">
-                <img src="/un.png" alt="UnRepo Logo" className="w-16 h-16 object-contain" />
+                <img src="/blackremove.png" alt="UnRepo Logo" className="w-16 h-16 object-contain" />
                 <span className="text-xl font-bold text-foreground">dashboard</span>
               </Link>
               

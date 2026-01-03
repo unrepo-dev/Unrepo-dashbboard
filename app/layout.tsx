@@ -9,10 +9,6 @@ import { Toaster } from "sonner";
 export const metadata: Metadata = {
   title: "UnRepo Dashboard - Developer API Portal",
   description: "Generate and manage your UnRepo API keys for chatbot and research services",
-  icons: {
-    icon: "/cropped_circle_image.png",
-    apple: "/cropped_circle_image.png",
-  },
 };
 
 export default function RootLayout({
