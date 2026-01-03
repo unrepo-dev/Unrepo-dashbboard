@@ -14,7 +14,7 @@ const footerLinks = [
 ]
 
 const socialLinks = [
-  { name: "GitHub", icon: Github, href: "https://github.com/unrepoai" },
+  { name: "GitHub", icon: Github, href: "https://github.com/unrepo-dev" },
   {
     name: "NPM",
     icon: ({ className }: { className?: string }) => (
