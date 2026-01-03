@@ -80,7 +80,7 @@ export default function Footer() {
         <div className="flex justify-center items-center mb-6 sm:mb-8">
           <Link href="/" className="flex items-center gap-2 transition-transform duration-200 hover:scale-105">
             <Image
-              src="/images/unrepo-removebg-preview-20-281-29.png"
+              src="/blackremove.png"
               alt="UnRepo Logo"
               width={32}
               height={32}
