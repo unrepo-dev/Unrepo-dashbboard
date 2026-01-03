@@ -94,18 +94,19 @@ export default function DeveloperPortal() {
       
       const data = await res.json();
       
-      if (data.success) {
+      if (data.success && data.data?.apiKey) {
+        const apiKey = data.data.apiKey;
         const storageKey = selectedApiType === 'CHATBOT' ? 'unrepo_chatbot_key' : 'unrepo_research_key';
-        localStorage.setItem(storageKey, data.data.apiKey);
+        localStorage.setItem(storageKey, apiKey);
         
         await fetchApiKeys();
         closeApiModal();
         toast.success(`API key generated successfully!`, {
-          description: `Key: ${data.data.apiKey.slice(0, 20)}...`,
+          description: `Key: ${apiKey.slice(0, 20)}...`,
           duration: 5000,
         });
       } else {
-        toast.error(data.error || 'Failed to generate API key');
+        toast.error(data.error || data.message || 'Failed to generate API key');
       }
     } catch (error) {
       console.error('Failed to generate API key:', error);
