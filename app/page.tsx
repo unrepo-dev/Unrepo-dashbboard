@@ -94,14 +94,18 @@ export default function DeveloperPortal() {
       
       const data = await res.json();
       
-      if (data.success && data.data?.apiKey) {
-        const apiKey = data.data.apiKey;
+      // Handle both new key (apiKey) and existing key (key) responses
+      const apiKey = data.data?.apiKey || data.data?.key;
+      
+      if (data.success && apiKey) {
         const storageKey = selectedApiType === 'CHATBOT' ? 'unrepo_chatbot_key' : 'unrepo_research_key';
         localStorage.setItem(storageKey, apiKey);
         
         await fetchApiKeys();
         closeApiModal();
-        toast.success(`API key generated successfully!`, {
+        
+        const isExisting = data.message === 'API key already exists';
+        toast.success(isExisting ? `Using existing API key` : `API key generated successfully!`, {
           description: `Key: ${apiKey.slice(0, 20)}...`,
           duration: 5000,
         });
@@ -123,7 +127,8 @@ export default function DeveloperPortal() {
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${apiUrl}/api/keys/${keyId}`, {
+      const userEmail = session?.user?.email || '';
+      const res = await fetch(`${apiUrl}/api/keys/${keyId}?email=${encodeURIComponent(userEmail)}`, {
         method: 'DELETE',
       });
       
